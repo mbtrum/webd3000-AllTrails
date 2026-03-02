@@ -1,0 +1,52 @@
+﻿@model IEnumerable<AllTrails.Models.TripReport>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Trip Reports</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-primary btn-sm">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>            
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>                     
+            <th>
+                @Html.DisplayNameFor(model => model.Trail)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>            
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>                
+            <td>
+                @if (item.Trail.ImageUrl != null)
+                {
+                    <img src="@item.Trail.ImageUrl" alt="@item.Trail.Name" class="thumbnail" />
+                    <br />
+                }
+                @Html.DisplayFor(modelItem => item.Trail.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

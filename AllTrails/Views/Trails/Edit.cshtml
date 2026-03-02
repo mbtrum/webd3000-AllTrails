@@ -1,0 +1,78 @@
+﻿@model AllTrails.Models.Trail
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Trail</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageUrl" />
+
+            @if(Model.ImageUrl != null)
+            {
+                <div class="mb-3">
+                    <img src="@Model.ImageUrl" alt="@Model.Name" class="thumbnail" />
+                </div>
+            }                
+
+            <div class="mb-3">
+                <label>Change Image</label>
+                <input type="file" name="ImageFile" id="ImageFile" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            @* <div class="mb-3">
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div> *@
+            <div class="mb-3">
+                <label asp-for="LengthKm" class="control-label"></label>
+                <input asp-for="LengthKm" class="form-control" />
+                <span asp-validation-for="LengthKm" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="LengthMetres" class="control-label"></label>
+                <input asp-for="LengthMetres" class="form-control" />
+                <span asp-validation-for="LengthMetres" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ElevationGainMetres" class="control-label"></label>
+                <input asp-for="ElevationGainMetres" class="form-control" />
+                <span asp-validation-for="ElevationGainMetres" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EstimatedDuration" class="control-label"></label>
+                <input asp-for="EstimatedDuration" class="form-control" />
+                <span asp-validation-for="EstimatedDuration" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
