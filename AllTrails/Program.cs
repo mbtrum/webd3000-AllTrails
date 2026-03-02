@@ -1,10 +1,16 @@
-﻿using AllTrails.Data;
+using AllTrails.Data;
 using AllTrails.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<AllTrailsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AllTrailsContext") ?? throw new InvalidOperationException("Connection string 'AllTrailsContext' not found.")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>() // add roles
+    .AddEntityFrameworkStores<AllTrailsContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -33,6 +39,26 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+// add Identity Razor Pages
+app.MapRazorPages().WithStaticAssets();
+
+
+//
+// seed Roles
+//
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "Admin", "Reviewer" };
+
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
 
 
 app.Run();

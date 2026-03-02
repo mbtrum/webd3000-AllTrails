@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AllTrails.Data;
+using AllTrails.Models;
+using AllTrails.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AllTrails.Data;
-using AllTrails.Models;
-using AllTrails.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AllTrails.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TrailsController : Controller
     {
         private readonly AllTrailsContext _context;
@@ -38,6 +40,8 @@ namespace AllTrails.Controllers
 
             var trail = await _context.Trail
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
             if (trail == null)
             {
                 return NotFound();
