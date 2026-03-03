@@ -11,8 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace AllTrails.Controllers
-{
-    [Authorize(Roles = "Admin")]
+{    
     public class TrailsController : Controller
     {
         private readonly AllTrailsContext _context;
@@ -51,6 +50,7 @@ namespace AllTrails.Controllers
         }
 
         // GET: Trails/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -61,6 +61,7 @@ namespace AllTrails.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,LengthKm,ElevationGainMetres,EstimatedDuration")] Trail trail, IFormFile? ImageFile)
         {
             if (ModelState.IsValid)
@@ -84,6 +85,7 @@ namespace AllTrails.Controllers
         }
 
         // GET: Trails/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -106,6 +108,7 @@ namespace AllTrails.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageUrl,LengthKm,ElevationGainMetres,EstimatedDuration")] Trail trail, IFormFile? ImageFile)
         {
             if (id != trail.Id)
@@ -148,6 +151,7 @@ namespace AllTrails.Controllers
         }
 
         // GET: Trails/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,6 +173,7 @@ namespace AllTrails.Controllers
         // POST: Trails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var trail = await _context.Trail.FindAsync(id);

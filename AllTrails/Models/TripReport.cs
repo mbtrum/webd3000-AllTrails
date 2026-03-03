@@ -26,5 +26,7 @@ namespace AllTrails.Models
 
         [ValidateNever]
         public Trail Trail { get; set; } = null!; // nav property
+
+        public string CreatedBy { get; set; } = string.Empty;
     }
 }

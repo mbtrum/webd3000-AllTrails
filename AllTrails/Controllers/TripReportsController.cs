@@ -7,22 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AllTrails.Data;
 using AllTrails.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using AllTrails.Migrations;
 
 namespace AllTrails.Controllers
 {
+    [Authorize]
     public class TripReportsController : Controller
     {
         private readonly AllTrailsContext _context;
 
-        public TripReportsController(AllTrailsContext context)
+        private readonly string _userId;
+
+        public TripReportsController(AllTrailsContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _userId = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
         }
 
-        // GET: TripReports
+        // GET: TripReports       
         public async Task<IActionResult> Index()
         {
-            var allTrailsContext = _context.TripReport.Include(t => t.Trail);
+            var allTrailsContext = _context.TripReport
+                .Where(c => c.CreatedBy == _userId)  // limit access to records belonging to the logged in user
+                .Include(t => t.Trail);
+            
             return View(await allTrailsContext.ToListAsync());
         }
 
@@ -35,6 +45,7 @@ namespace AllTrails.Controllers
             }
 
             var tripReport = await _context.TripReport
+                .Where(c => c.CreatedBy == _userId)  // limit access to records belonging to the logged in user
                 .Include(t => t.Trail)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -61,6 +72,9 @@ namespace AllTrails.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Rating,Description,TrailId")] TripReport tripReport)
         {
+            // The user currently logged in
+            tripReport.CreatedBy = _userId;
+
             if (ModelState.IsValid)
             {
                 _context.Add(tripReport);
@@ -83,6 +97,7 @@ namespace AllTrails.Controllers
             }
 
             var tripReport = await _context.TripReport
+                .Where(c => c.CreatedBy == _userId)  // limit access to records belonging to the logged in user
                 .Include(t => t.Trail)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -101,7 +116,7 @@ namespace AllTrails.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Rating,Description,CreatedDate,TrailId")] TripReport tripReport)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Rating,Description,CreatedDate,TrailId,CreatedBy")] TripReport tripReport) // added CreatedBy
         {
             if (id != tripReport.Id)
             {
@@ -144,6 +159,7 @@ namespace AllTrails.Controllers
             }
 
             var tripReport = await _context.TripReport
+                .Where(c => c.CreatedBy == _userId)  // limit access to records belonging to the logged in user
                 .Include(t => t.Trail)
                 .FirstOrDefaultAsync(m => m.Id == id);
             
