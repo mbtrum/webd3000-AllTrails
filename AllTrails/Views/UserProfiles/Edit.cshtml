@@ -1,0 +1,44 @@
+﻿@model AllTrails.Models.UserProfile
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Public Profile</h1>
+
+<p>
+    The values you save here will be visible on the public AllTrails website.
+</p>
+
+@if(ViewBag.Message != null)
+{
+    <p class="text-danger">
+        @ViewBag.Message
+    </p>
+}
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdentityId" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

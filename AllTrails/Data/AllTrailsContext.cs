@@ -18,5 +18,6 @@ namespace AllTrails.Data
 
         public DbSet<AllTrails.Models.Trail> Trail { get; set; } = default!;
         public DbSet<AllTrails.Models.TripReport> TripReport { get; set; } = default!;
+        public DbSet<AllTrails.Models.UserProfile> UserProfile { get; set; } = default!;
     }
 }
